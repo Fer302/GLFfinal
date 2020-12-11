@@ -26,6 +26,7 @@
 
     <!-- Automata NFAtoDFA DOM -->
     <script src="DOM3.js"></script>
+    <script src="DOM2.js"></script>
     <script src="DOM.js"></script>
     
 
@@ -43,7 +44,7 @@
 
 <body>
 <div class="navbar navbar-default">
-    <h3 class="navbar-text">Aplicacion</h3>
+    <h3 class="navbar-text">Aplicacion Automatas</h3>
 </div>
 
 <div class="container" >
@@ -51,13 +52,254 @@
     <h1>Consideraciones</h1>
     <p class="instructions"></p>
     <ul class="instructions-list">
+        <li>Para ingresar automatas, hacerlo en la secciones automata 1 y 2 respectivamente</li>
+        <li>Para ingresar un estado epsilon, dejar vacio o escribir[ &lambda; ] </li>
+        <li>Separar estados finales con coma</li>
+        <li>Para que las funciones se muetren correctamente, procurar que los dos automatas tengan distintos nombres de sus estados( por ejemplo no repetir q1 en los 2 automatas)</li>
+        <li>Por restriccion de la libreria para mostrar automatas,tiene que haber almenos 1 estado final el automata para mostrarlo</li>
+        <li>Procurar tambien que el alfabeto sea comun entre los dos</li>
     </ul>
- <div id="probando1">
+    <!--
+    <div >
+    <button class="btn btn-primary "id="auto1">AP 1</button>
+    <button class="btn btn-warning" id="auto2">AP 2</button>
+    <button class="btn btn-danger" id="auto3">Ingresar AFD</button>
+    <button class="btn btn-success" id="funciones">Union 2 AP</button>
+    <button class="btn btn-success" id="btnConcatenacion">Concatenacion 2 AP</button>
+    </div>
+-->
+    <div id="probando1">
     <h1 id="numAutomata">Mapa</h1>
     <input type="file" id="input" oninput="GetMap()" accept=".txt">
     <h1 id="output"></h1>
+    <button type="button" class="btn btn-danger" id="resetBtn" title="Elimina automata">Reset</button>
+    <button type="button" class="btn btn-info" id="exampleBtn" title="Ejemplo">Ejemplo</button>
+    <form class="form-horizontal" id="nfa" role="form" aria-label="Related links">
+        <form class="form-horizontal">
+            <div class="form-group form-inline" style="margin-left:15px;">
+                <label for="initialStateInput">Estado inicial:&nbsp;&nbsp;</label>
+                <input type="text" class="form-control" id="initialStateInput">
+            </div>
+            <div class="form-group form-inline" style="margin-left:15px;">
+                <label for="finalStatesInput">Estados Finales:&nbsp;</label>
+                <input type="text" class="form-control" id="finalStatesInput">
+            </div>
+        </form>
+        <div class="form-inline" id="nfa-transitions">
+            <div class="production-row">
+                &delta;(&nbsp;<input type="text" class="form-control current-state-input">&nbsp;,&nbsp;<input
+                    type="text"
+                    class="form-control input-symbol"
+                    placeholder="&lambda;">&nbsp;)&nbsp;=&nbsp;<input
+                    type="text" class="form-control next-states">
+                <span class="glyphicon glyphicon-remove-circle remove-button" title="Elimina esta transicion"></span>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+    </form>
+    <div class="clearfix"></div>
+
+    <div class="col-xs-6 new-production">
+        <button id="new-transition" type="button" class="btn btn-default btn-lg btn-block"
+                title="Create a new transition">
+            <span class="glyphicon glyphicon-plus"></span> &nbsp;Click aqui para nueva transicion
+        </button>
+    </div>
+
+    <div class="clearfix"></div>
+    <h1 id="verify-update-debug">Visualizacion</h1>
+
+    <p>Muestra de Automata 1:</p>
+    <span id="current-nfa-status"></span>
+    <div id="current-nfa"></div>
+
+    <div class="clearfix"></div>
+    <h1>Automata en AFD</h1>
+    <div class="row">
+        <div class="col-lg">
+            <span id="current-dfa-status"></span>
+            <div id="current-dfa"></div>
+        </div>
+    </div>
+
+    <h1>Minimizado</h1>
+    <span id="current-dfa-minimized-status"></span>
+    <div id="current-dfa-minimized"></div>
+    <div class="clearfix"></div>
+
+<!--
+    </div>
+    <div id="probando2">
+        <h1 id="numAutomata">Automata 2</h1>
+        <button type="button" class="btn btn-info" id="exampleBtn2" title="Ejemplo">Ejemplo</button>
+        <form class="form-horizontal" id="nfa2" role="form" aria-label="Related links2">
+            <form class="form-horizontal">
+                <div class="form-group form-inline" style="margin-left:15px;">
+                    <label for="initialStateInput2">Estado Inicial:&nbsp;&nbsp;</label>
+                    <input type="text" class="form-control" id="initialStateInput2">
+                </div>
+                <div class="form-group form-inline" style="margin-left:15px;">
+                    <label for="finalStatesInput2">Estados finales:&nbsp;</label>
+                    <input type="text" class="form-control" id="finalStatesInput2">
+                </div>
+            </form>
+            <div class="form-inline" id="nfa-transitions2">
+                <div class="production-row2" >
+                    &delta;(&nbsp;<input type="text" class="form-control current-state-input2">&nbsp;,&nbsp;<input
+                        type="text"
+                        class="form-control input-symbol2"
+                        placeholder="&lambda;">&nbsp;)&nbsp;=&nbsp;<input
+                        type="text" class="form-control next-states2">
+                    <span class="glyphicon glyphicon-remove-circle remove-button" title="Elimina esta transicion"></span>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+        </form>
+        <div class="clearfix"></div>
+    
+        <div class="col-xs-6 new-production2">
+            <button id="new-transition2" type="button" class="btn btn-default btn-lg btn-block"
+                    title="Create a new transition2">
+                <span class="glyphicon glyphicon-plus"></span> &nbsp;Click aqui para nueva transicion
+            </button>
+        </div>
+    
+        <div class="clearfix"></div>
+        <h1 id="verify-update-debug2">Visualizacion</h1>
+    
+        <p>Muestra de automata 2</p>
+        <span id="current-nfa-status2"></span>
+        <div id="current-nfa2"></div>
+        
+    <div class="clearfix"></div>
+    <h1>Automata en AFD</h1>
+    <div class="row">
+        <div class="col-lg">
+            <span id="current-dfa-status2"></span>
+            <div id="current-dfa2"></div>
+        </div>
+    </div>
+
+    <h1>Automata minimizado</h1>
+    <span id="current-dfa-minimized-status2"></span>
+    <div id="current-dfa-minimized2"></div>
+    <div class="clearfix"></div>   
+       
+    
+        </div>
+    <div id="probando3">
+        <div>
+        <h1>Union de Automatas</h1>
+       </div>
+       <div class="clearfix"></div>
+       <div><button class="btn btn-info" id="Mostrar">Mostrar</button>   </div>
+       <div id="union-automatas"></div>
+       <div class="clearfix"></div>
+       <div><h1>Union en AFD</h1></div>
+       <div class="clearfix"></div>
+       <div id="union-dfa"></div>
+       <div class="clearfix"></div>
+       <h1>AFD minimizado</h1>
+       <div id="union-min"></div>
+       <div class="clearfix"></div>
+    </div>
+    <div id="probando4">
+        <div>
+        <h1>Concatenacion de Automatas</h1>
+       </div>
+       <div class="clearfix"></div>
+       <div><button class="btn btn-info" id="mostrarConcatenacion">Mostrar</button>   </div>
+       <div id="concatenacion-automatas"></div>
+       <div class="clearfix"></div>
+       <h1>Concatenacion en AFD</h1>
+       <div id="concatenacion-afd"></div>
+       <h1>AFD minimizado</h1>
+       <div id="conc-min"></div>
+
+    </div>
+    <div id="probando5">
+        <div>
+        <h1>Interseccion de Automatas</h1>
+       </div>
+       <div class="clearfix"></div>
+       <div><button class="btn btn-info" id="mostrarInterseccion">Mostrar</button>   </div>
+       <h1>Interseccion en AFD</h1>
+       <div id="interseccion-automatas"></div>
+       <div class="clearfix"></div>
+       <h1>AFD minimizado</h1>
+       <div id="interseccion-min"></div>
 
 
+    </div>
+    <div id="probando6">
+        <div>
+        <h1>Complemento de los Automatas</h1>
+       </div>
+       <div class="clearfix"></div>
+       <h1>Automata 1</h1>
+       <div><button class="btn btn-info" id="mostrarComp1">Mostrar</button>   </div>
+       <div id="primer-comp"></div>
+       <div class="clearfix"></div>
+       <h1>Automata 2</h1>
+       <div><button class="btn btn-info" id="mostrarComp2">Mostrar</button>   </div>
+       <div id="segundo-comp"></div>
+       <div class="clearfix"></div>
+
+
+
+    </div>
+    <div id="seccionAuto3">
+        <h1 id="numAutomataAFD">Automata AFD</h1>
+        <button type="button" class="btn btn-info" id="exampleBtn3" title="Ejemplo">Ejemplo</button>
+        <form class="form-horizontal" id="nfa3" role="form" aria-label="Related links3">
+            <form class="form-horizontal">
+                <div class="form-group form-inline" style="margin-left:15px;">
+                    <label for="initialStateInput3">Estado Inicial:&nbsp;&nbsp;</label>
+                    <input type="text" class="form-control" id="initialStateInput3">
+                </div>
+                <div class="form-group form-inline" style="margin-left:15px;">
+                    <label for="finalStatesInput3">Estados finales:&nbsp;</label>
+                    <input type="text" class="form-control" id="finalStatesInput3">
+                </div>
+            </form>
+            <div class="form-inline" id="nfa-transitions3">
+                <div class="production-row3" >
+                    &delta;(&nbsp;<input type="text" class="form-control current-state-input3">&nbsp;,&nbsp;<input
+                        type="text"
+                        class="form-control input-symbol3"
+                        placeholder="&lambda;">&nbsp;)&nbsp;=&nbsp;<input
+                        type="text" class="form-control next-states3">
+                    <span class="glyphicon glyphicon-remove-circle remove-button" title="Elimina esta transicion"></span>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+        </form>
+        <div class="clearfix"></div>
+    
+        <div class="col-xs-6 new-production3">
+            <button id="new-transition3" type="button" class="btn btn-default btn-lg btn-block"
+                    title="Create a new transition3">
+                <span class="glyphicon glyphicon-plus"></span> &nbsp;Click aqui para nueva transicion
+            </button>
+        </div>
+    
+        <div class="clearfix"></div>
+        <h1 id="verify-update-debug3">Visualizacion</h1>
+    
+        <p>Muestra de automata 3</p>
+        <span id="current-nfa-status3"></span>
+        <div id="current-nfa3"></div>
+
+        <div>
+            <button class="btn btn-success" id="btnER">Obtener ER</button>
+            <div>
+                <p id="ER"></p>
+            </div>
+        </div>
+        
+    <div class="clearfix"></div>
+
+</div> -->
 </body>
 
 </html>
