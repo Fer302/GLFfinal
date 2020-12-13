@@ -8,6 +8,27 @@ class UserInput {
     }
 }
 
+class Transition {
+    constructor(state, nextStates, symbol) {
+        if (!(typeof state === 'string' || state instanceof String))
+            throw new Error("Expected a single state (string)");
+
+        if (!Array.isArray(nextStates)) {
+            console.warn("Expected nextStates in transition to be an array");
+            let arr = [];
+            arr.push(nextStates.toString());
+            nextStates = arr;
+        }
+
+        if (!(typeof symbol === 'string' || symbol instanceof String))
+            throw new Error("Expected a string symbol");
+
+        this.state = state;
+        this.nextStates = nextStates;
+        this.symbol = symbol;
+    }
+}
+
 class map {
     constructor(string){
         this.PuntoVenta = [];
@@ -45,14 +66,40 @@ function ConvertMap(map){
     var states = [], transitions = [], alphabet = [];
     var initialState = "D" + map.Dependencia[0];
     var finalStates = [initialState];
+    var form = document.getElementById("places");
+    var selectC = document.createElement("select");
+    var selectP = document.createElement("div");
+    var auxOpt, auxDiv, auxNum, auxLabel;
     for(i = 0; i < map.PuntoVenta.length; i++){
         id = "P" + map.PuntoVenta[i][0];
         states.push(id);
+        auxDiv = document.createElement('div');
+        auxOpt = document.createElement('input');
+        auxOpt.type = "checkbox";
+        auxOpt.value = id;
+        auxNum = document.createElement('input');
+        auxNum.type = "number";
+        auxDiv.appendChild(auxOpt);
+        auxDiv.appendChild( document.createTextNode(id) );
+        auxDiv.appendChild(auxNum);
+        selectP.appendChild(auxDiv);
     }
     for(i = 0; i < map.CentroDistribucion.length; i++){
         id = "C" + map.CentroDistribucion[i][0];
         states.push(id);
+        auxOpt = document.createElement('option');
+        auxOpt.appendChild( document.createTextNode(id) );
+        auxOpt.value = id;
+        selectC.appendChild(auxOpt);
     }
+    auxDiv = document.createElement('h3');
+    auxDiv.appendChild(document.createTextNode('Seleccional centro de distribucion'));
+    form.appendChild(auxDiv);
+    form.appendChild(selectC);
+    auxDiv = document.createElement('h3');
+    auxDiv.appendChild(document.createTextNode('Seleccional puntos de venta'));
+    form.appendChild(auxDiv);
+    form.appendChild(selectP);
     for(i = 0; i < map.PuntoVenta.length; i++){
         X = map.PuntoVenta[i][1][0] - map.Dependencia[1][0];
         Y = map.PuntoVenta[i][1][1] - map.Dependencia[1][1];
@@ -112,12 +159,13 @@ function ConvertMap(map){
 
 function GetMap(){
     var reader = new FileReader();
-    //var out = document.getElementById("output");
     var ma;
-    file = document.getElementById("input").files[0];
+    var see = document.getElementById("input");
+    file = see.files[0];
     reader.addEventListener('load', (event) => {
         ma = ConvertMap(new map(reader.result));
-        alert("3");
+        see.style.display = "none";
+        alert("Creado con exito!");
     });
     reader.readAsText(file);
 }
