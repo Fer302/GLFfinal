@@ -14,7 +14,6 @@ class Transition {
             throw new Error("Expected a single state (string)");
 
         if (!Array.isArray(nextStates)) {
-            console.warn("Expected nextStates in transition to be an array");
             let arr = [];
             arr.push(nextStates.toString());
             nextStates = arr;
@@ -51,11 +50,23 @@ class map {
             }
             arr = [];
         }
+        console.log(this.PuntoVenta);
+        console.log(this.CentroDistribucion);
     }
+
 }
 
 $(document).ready(function () {
-   
+    $("#cbox").click(function () {
+        console.log("ola");
+        var selected = [];
+  $('div#cboxc input[type=checkbox]').each(function() {
+   if ($(this).is(":checked")) {
+       selected.push($(this).attr('id'));
+   }
+});
+console.log(selected);
+    });
 });
 
 
@@ -77,6 +88,7 @@ function ConvertMap(map){
         auxOpt = document.createElement('input');
         auxOpt.type = "checkbox";
         auxOpt.value = id;
+        auxOpt.id= id;
         auxNum = document.createElement('input');
         auxNum.type = "number";
         auxDiv.appendChild(auxOpt);
@@ -100,6 +112,7 @@ function ConvertMap(map){
     auxDiv.appendChild(document.createTextNode('Seleccional puntos de venta'));
     form.appendChild(auxDiv);
     form.appendChild(selectP);
+    /*  
     for(i = 0; i < map.PuntoVenta.length; i++){
         X = map.PuntoVenta[i][1][0] - map.Dependencia[1][0];
         Y = map.PuntoVenta[i][1][1] - map.Dependencia[1][1];
@@ -154,7 +167,10 @@ function ConvertMap(map){
             alphabet.push(distance);
         }
     }
+    console.log(states);
+    console.log(transitions);
     return new UserInput(initialState, finalStates, states, alphabet, transitions);
+    */
 }
 
 function GetMap(){

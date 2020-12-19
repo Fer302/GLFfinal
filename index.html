@@ -8,21 +8,14 @@
     <!-- Bootstrap -->
     <link href="bootstrap.min.css" rel="stylesheet">
 
-    <!-- CSS -->
-    <link href="styles.css" rel="stylesheet">
+
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="bootstrap.min.js"></script>
 
-    <script src="d3.v5.min.js"></script>
-    <script src="viz.js" type="javascript/worker"></script>
-    <script src="librerias/d3-graphviz.js"></script>
-
-
-    <!-- Automata NFAtoDFA DOM -->
     <script src="DOM3.js"></script>
     <script src="DOM.js"></script>
     
@@ -36,12 +29,46 @@
         https://github.com/magjac/d3-graphviz
         https://github.com/JohnLFX/Automata-NFA-to-DFA/blob/master/index.html
     --> 
+    <style>
+    div {
+		padding: 10px;
+	}
+	
+	.axis path,
+	.axis line {
+    	fill: none;
+    	stroke: black;
+    	shape-rendering: crispEdges;
+	}
+
+	.axis text {
+    	font-family: sans-serif;
+    	font-size: 11px;
+	}
+	.overlay {
+		position: absolute;
+		display: none;
+		text-align: center;
+		line-height: 490px;
+		height: 490px;
+		width: 960px;
+		z-index: 1;
+		background-color: rgba(208, 208, 208, 0.5);
+	}
+	.inner {
+    position: absolute;
+    }
+    #svg-container2{
+        border-style:groove;
+        border-color: black;
+    }
+    </style>
 
 </head>
 
 <body>
 <div class="navbar navbar-default">
-    <h3 class="navbar-text">Aplicacion Automatas</h3>
+    <h3 class="navbar-text">Aplicacion mapa de ruta</h3>
 </div>
 
 <div class="container" >
@@ -52,12 +79,32 @@
 
     </ul>
 
-    <div id="probando1">
+    
     <h1 id="numAutomata">Mapa</h1>
     <input type="file" id="input" oninput="GetMap()" accept=".txt">
     <h1 id="output"></h1>
+    <div id="cboxc">
     <form id="places"></form>
-
+    </div>
+    <button id="nearest-neighbor">Nearest Neighbor</button>
+    <button id="farthest-insertion">Farthest Insertion</button>
+	<button id="in-order">In Order</button>
+    <button id="clear">Clear</button>
+    <button id="2-opt">2-opt</button>
+    <button id="cbox">DEBUGGING</button>
+	<div id="svg-container">
+		<div class="overlay" id="overlay">
+			  <p><h1>Loading</h1></p>
+		</div>
+		<div id="svg-container2" class="inner"></div>
+    </div>
+    <br><br>
+	<input id="animate" type="checkbox" checked="checked">Animate</input>
+	<h2 id="distance">Distance: 0</h2>
+	<div id="graph-container"></div>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+	<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+	<script src="tsp.js" charset="utf-8"></script>
 
 
 </html>
