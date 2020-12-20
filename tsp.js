@@ -7,7 +7,17 @@ var instantDuration = 20;
 var currPathDistance = 0;
 var lineWidth = 2;
 var orden=[];
+function getRandomIntInclusive(min, max) {
+    const randomBuffer = new Uint32Array(1);
 
+    window.crypto.getRandomValues(randomBuffer);
+
+    let randomNumber = randomBuffer[0] / (0xffffffff + 1);
+
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(randomNumber * (max - min + 1)) + min;
+}
 
 
 var svg = d3.select("#svg-container").append("svg")
@@ -696,13 +706,13 @@ function simulatedAnnealing(coolingFunction) {
 	//var bestDistance = Number.MAX_SAFE_INTEGER;
 	for (var step = 0; step < steps; step++) {
 		let temp = coolingFunction(startTemp, step, steps);
-		var i = Math.floor(path.length * Math.random());
-		var j = Math.floor(path.length * Math.random());
+		var i = Math.floor(path.length * getRandomIntInclusive(0, 1) );
+		var j = Math.floor(path.length * getRandomIntInclusive(0, 1) );
 		var first = Math.min(i, j);
 		var second = Math.max(i, j);
 
 		if (first == path.length - 1) {
-			first = Math.floor((path.length - 1) * Math.random());
+			first = Math.floor((path.length - 1) * getRandomIntInclusive(0, 1) );
 		}
 
 		// check edge from last point to first
@@ -712,7 +722,7 @@ function simulatedAnnealing(coolingFunction) {
 			- distanceMatrix[path[first]][path[first + 1]] - distanceMatrix[path[second]][path[afterSecond]];
 
 		// always accept step if it is superior, accept with some chance if it is inferior
-		if (changeInDistance < 0 || Math.random() <= Math.exp((0 - changeInDistance) / temp)) {
+		if (changeInDistance < 0 || getRandomIntInclusive(0, 1)  <= Math.exp((0 - changeInDistance) / temp)) {
 			if (changeInDistance > 0) {
 				console.log(step + " inferior step");
 			}
@@ -766,7 +776,7 @@ function genetic() {
 			var secondParent = tournamentSelect(parentPaths);
 			var child = orderCrossover(parentPaths[firstParent], parentPaths[secondParent]);
 
-			if (Math.random() < mutationChance) {
+			if (getRandomIntInclusive(0, 1)  < mutationChance) {
 				child = mutation(child);
 			}
 			childrenPaths.push(child);
@@ -789,8 +799,9 @@ function genetic() {
 }
 
 function shuffle(arr) {
+
     for (var i = arr.length - 2; i > 1; i--) {
-    const j = 1 + Math.floor(Math.random() * i);
+    const j = 1 + Math.floor(getRandomIntInclusive(0, 1) * i);
       [arr[i], arr[j]] = [arr[j], arr[i]];
     }
     return arr;
@@ -802,7 +813,7 @@ function tournamentSelect(paths) {
 	var fittest = -1;
 	var bestDistance = Number.MAX_VALUE;
 	for (var i = 0; i < tournamentSize; i++) {
-		var randomIndex = Math.floor(paths.length * Math.random());
+		var randomIndex = Math.floor(paths.length *getRandomIntInclusive(0, 1) );
 		var fitness = getPathDistance(paths[randomIndex]);
 		if (fitness < bestDistance) {
 			bestDistance = fitness;
@@ -817,8 +828,8 @@ function tournamentSelect(paths) {
 function orderCrossover(firstPath, secondPath) {
 	var firstChild = [];
 
-	var i = Math.floor(firstPath.length * Math.random());
-	var j = Math.floor(firstPath.length * Math.random());
+	var i = Math.floor(firstPath.length * getRandomIntInclusive(0, 1) );
+	var j = Math.floor(firstPath.length * getRandomIntInclusive(0, 1) );
 	var first = Math.min(i, j);
 	var second = Math.max(i, j);
 
@@ -842,13 +853,13 @@ function orderCrossover(firstPath, secondPath) {
 }
 
 function mutation(child) {
-	var i = Math.floor(child.length * Math.random());
-	var j = Math.floor(child.length * Math.random());
+	var i = Math.floor(child.length * getRandomIntInclusive(0, 1) );
+	var j = Math.floor(child.length * getRandomIntInclusive(0, 1) );
 	var first = Math.min(i, j);
 	var second = Math.max(i, j);
 
 	if (first == child.length - 1) {
-		first = Math.floor((child.length - 1) * Math.random());
+		first = Math.floor((child.length - 1) * getRandomIntInclusive(0, 1) );
 	}
 
 	// check edge from last point to first
