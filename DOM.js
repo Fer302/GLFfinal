@@ -7,6 +7,8 @@ class UserInput {
         this.transitions = transitions;
     }
 }
+var ptsV=[];
+var puntosFinales=[];
 
 class Transition {
     constructor(state, nextStates, symbol) {
@@ -60,12 +62,23 @@ $(document).ready(function () {
     $("#cbox").click(function () {
         console.log("ola");
         var selected = [];
-  $('div#cboxc input[type=checkbox]').each(function() {
-   if ($(this).is(":checked")) {
-       selected.push($(this).attr('id'));
-   }
-});
-console.log(selected);
+        $('div#cboxc input[type=checkbox]').each(function () {
+            if ($(this).is(":checked")) {
+                selected.push($(this).attr('id'));
+            }
+        });
+        console.log(selected);
+        console.log(ptsV);
+        puntosFinales=[];
+        for(let xAux of selected){
+            var strAux=xAux;
+            strAux=strAux.substring(1);
+            for(let yAux of ptsV){
+                if(strAux==yAux[0]){
+                    puntosFinales.push(yAux[1]);
+                }
+            }
+        }
     });
 });
 
@@ -95,6 +108,7 @@ function ConvertMap(map){
         auxDiv.appendChild( document.createTextNode(id) );
         auxDiv.appendChild(auxNum);
         selectP.appendChild(auxDiv);
+        ptsV.push(map.PuntoVenta[i]);
     }
     for(i = 0; i < map.CentroDistribucion.length; i++){
         id = "C" + map.CentroDistribucion[i][0];
@@ -176,6 +190,7 @@ function ConvertMap(map){
 function GetMap(){
     var reader = new FileReader();
     var ma;
+    var nMap2;
     var see = document.getElementById("input");
     file = see.files[0];
     reader.addEventListener('load', (event) => {
@@ -183,6 +198,10 @@ function GetMap(){
         see.style.display = "none";
         alert("Creado con exito!");
     });
+
     reader.readAsText(file);
 }
+
+
+
 

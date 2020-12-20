@@ -1,11 +1,13 @@
 // hardcoded
 var height = 700;
 var width = 700;
-var N = 7;
+var N = 5;
 var transitionDuration = 12000 / N;
 var instantDuration = 20;
 var currPathDistance = 0;
 var lineWidth = 2;
+
+
 
 var svg = d3.select("#svg-container").append("svg")
 	.attr("width", width)
@@ -155,21 +157,18 @@ function toLine(isClosed) {
 
 function generatePoints() {
 	points = [];
-	for (var i = 0; i < N; i++) {
-		points[i] = {x: Math.floor(Math.random() * width), y: Math.floor(Math.random() * height)};
+	for (var i = 0; i < puntosFinales.length; i++) {
+		points[i] = {x: parseInt(puntosFinales[i][0]) , y:parseInt(puntosFinales[i][1]) };
 	}
+	console.log(points[0].x);
+	console.log(points[0].y);
+	console.log(points);
 }
 
-function generatePoints() {
-	points = [];
-	for (var i = 0; i < N; i++) {
-		points[i] = {x: Math.floor(Math.random() * width), y: Math.floor(Math.random() * height)};
-	}
-}
 
 
 function generateTestPoints() {
-	points = [{x: 0, y: 0}, {x: 200, y: 100}, {x: 700, y: 400}, {x: 600, y: 200}, {x: 200, y: 400},{x:300,y:300},{x:350,y:350}];
+	points = [{x: 500, y: 100}, {x: 200, y: 100}, {x: 700, y: 400}, {x: 600, y: 200}, {x:350,y:350}];
 }
 
 function drawPoints() { 
@@ -894,15 +893,10 @@ function heuristic(func, arg) {
 		console.timeEnd("time");
 	}, 10);
 }
-
-generateTestPoints();
-drawPoints();
-generateDistanceMatrix();
-//drawIndices();
-
-$("#num-points").change(function() {
+$("#cbox2").click(function () {
 	//console.log($(this).val());
-	N = $(this).val();
+	N = puntosFinales.length;
+	console.log(N);
 	transitionDuration = 12000 / N;
 	//console.log(N);
 	generatePoints();
@@ -910,9 +904,16 @@ $("#num-points").change(function() {
 	generateDistanceMatrix();
 	clearLines(true);
 	path.length = 0;
-	console.log(N + " Points");
-	$("#slider-value").html(N + " Points");
+	heuristic(nearestNeighbor);
 });
+
+
+generatePoints();
+drawPoints();
+generateDistanceMatrix();
+//drawIndices();
+
+
 
 $("#nearest-neighbor").on("click", function() {
 	heuristic(nearestNeighbor);
@@ -947,3 +948,5 @@ $("#clear").on("click", function() {
 $("#animate").on("click", function() {
 	animate = !animate;
 });
+
+
