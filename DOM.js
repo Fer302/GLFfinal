@@ -7,6 +7,7 @@ class UserInput {
         this.transitions = transitions;
     }
 }
+var ptsC=[];
 var ptsV=[];
 var puntosFinales=[];
 
@@ -67,12 +68,10 @@ $(document).ready(function () {
                 selected.push($(this).attr('id'));
             }
         });
-        var conceptName = $('#aioConceptName').find(":selected").id();
-        console.log(conceptName);
         console.log(selected);
         console.log(ptsV);
         puntosFinales=[];
-        var arAux;
+        var arAux=[];
         for(let xAux of selected){
             var strAux=xAux;
             strAux=strAux.substring(1);
@@ -93,6 +92,21 @@ $(document).ready(function () {
                 }
             }
         }
+        arAux=[];
+        var conceptName = $("#selectorBox option:selected")[0].value;
+        conceptName=conceptName.substring(1);
+        for(let xAux of ptsC){
+            if(conceptName == xAux[0]){
+                arAux=[];
+                arAux.push(xAux[1]);
+                arAux[0][0]=337+parseInt(arAux[0][0]);
+                arAux[0][1]=337-parseInt(arAux[0][1]);
+                puntosFinales.push(arAux[0]);
+            }
+        }
+
+
+        
         console.log(puntosFinales);
     });
 });
@@ -134,6 +148,7 @@ function ConvertMap(map){
         auxOpt.value = id;
         auxOpt.id= id;
         selectC.appendChild(auxOpt);
+        ptsC.push(map.CentroDistribucion[i]);
     }
     auxDiv = document.createElement('h3');
     auxDiv.appendChild(document.createTextNode('Seleccional centro de distribucion'));
