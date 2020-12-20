@@ -67,18 +67,33 @@ $(document).ready(function () {
                 selected.push($(this).attr('id'));
             }
         });
+        var conceptName = $('#aioConceptName').find(":selected").id();
+        console.log(conceptName);
         console.log(selected);
         console.log(ptsV);
         puntosFinales=[];
+        var arAux;
         for(let xAux of selected){
             var strAux=xAux;
             strAux=strAux.substring(1);
             for(let yAux of ptsV){
                 if(strAux==yAux[0]){
-                    puntosFinales.push(yAux[1]);
+                    console.log('igualdad');
+                    console.log(yAux[0]);
+                    console.log(yAux[1]);
+                        console.log('siuuu');
+                        arAux=[];
+                        arAux.push(yAux[1]);
+                        arAux[0][0]=337+parseInt(arAux[0][0]);
+                        arAux[0][1]=337-parseInt(arAux[0][1]);
+                        puntosFinales.push(arAux[0]);
+                    
+                  
+
                 }
             }
         }
+        console.log(puntosFinales);
     });
 });
 
@@ -92,6 +107,7 @@ function ConvertMap(map){
     var finalStates = [initialState];
     var form = document.getElementById("places");
     var selectC = document.createElement("select");
+    selectC.setAttribute("id","selectorBox");
     var selectP = document.createElement("div");
     var auxOpt, auxDiv, auxNum, auxLabel;
     for(i = 0; i < map.PuntoVenta.length; i++){
@@ -116,6 +132,7 @@ function ConvertMap(map){
         auxOpt = document.createElement('option');
         auxOpt.appendChild( document.createTextNode(id) );
         auxOpt.value = id;
+        auxOpt.id= id;
         selectC.appendChild(auxOpt);
     }
     auxDiv = document.createElement('h3');
