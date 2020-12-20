@@ -145,10 +145,11 @@ function initializeGraph() {
 
 // returns the d3.line function that takes in a path array to create an SVG path
 function toLine(isClosed) {
+	var interpolation;
 	if (isClosed) {
-		var interpolation = "linear-closed";
+		 interpolation = "linear-closed";
 	} else {
-		var interpolation = "linear";
+		 interpolation = "linear";
 	}
 	return d3.svg.line()
     .x(function(d) { return points[d].x; })
@@ -219,7 +220,7 @@ function generateDistanceMatrix() {
 		distanceMatrix[i] = new Array(N);
 	}
 
-	for (var i = 0; i < N; i++) {
+	for ( i = 0; i < N; i++) {
 		for (var j = i; j < N; j++) {
 			distanceMatrix[i][j] = Math.sqrt((points[i].x - points[j].x) * (points[i].x - points[j].x)
 				 + (points[i].y - points[j].y) * (points[i].y - points[j].y));
@@ -234,10 +235,10 @@ function distance(p1, p2) {
 	//return distances[Math.min(p1, p2)][Math.max(p1, p2)];
 }
 
-function getPathDistance(path) {
-	var d = distanceMatrix[path[0]][path[path.length - 1]];
-	for (var i = 1; i < path.length; i++) {
-		d += distanceMatrix[path[i - 1]][path[i]];
+function getPathDistance(path2) {
+	var d = distanceMatrix[path2[0]][path2[path2.length - 1]];
+	for (var i = 1; i < path2.length; i++) {
+		d += distanceMatrix[path2[i - 1]][path2[i]];
 	}
 	//d3.select("#distance")
 	//	.transition()
@@ -253,19 +254,19 @@ function updateDistanceDisplay() {
 }
 
 // initializes the path
-function appendPath(path, isClosed) {
+function appendPath(path3, isClosed) {
 	clearLines(true);
 
 	svg
 		.append("path")
-		.attr("d", toLine(isClosed)(path))
+		.attr("d", toLine(isClosed)(path3))
 		.attr("fill", "none")
 		.attr("stroke", "black")
 		.attr("stroke-width", lineWidth);
 }
 
 // chains transitions for each update of the path
-function updatePath(path, step, isClosed) {
+function updatePath(path4, step, isClosed) {
 	if (!animate) {
 		return;
 	}
@@ -274,7 +275,7 @@ function updatePath(path, step, isClosed) {
 		.transition()
 		.duration(0)
 		.delay((transitionDuration + instantDuration) * (step + 1))
-		.attr("d", toLine(isClosed)(path));
+		.attr("d", toLine(isClosed)(path4));
 	d3.timer.flush();
 }
 
@@ -317,6 +318,7 @@ function animateEdge(step, before, insert, after) {
 			.attr("x2", insert.x)
 			.attr("y2", insert.y)
 			.remove();
+		console.log(lineAfterInsertion);
 	} else {
 		lineBeforeInsertion
 			.attr("x2", before.x)
@@ -454,8 +456,8 @@ function clearLines(removePath) {
 	d3.timer.flush();
 }
 
-function swap(path, i, j) {
-	var clone = path.slice(0);
+function swap(path6, i, j) {
+	var clone = path6.slice(0);
 	var temp = clone[i];
 	clone[i] = clone[j];
 	clone[j] = temp;
@@ -483,13 +485,13 @@ function smallestEdge() {
 }
 
 function generateRandomPath() {
-	var path = [];
+	var path7 = [];
 	for (var i = 0; i < N; i++) {
-		path[i] = i;
+		path7[i] = i;
 	}
-	console.log(path);
-	path = shuffle(path);
-	return path;
+	console.log(path7);
+	path7 = shuffle(path7);
+	return path7;
 }
 
 // inorder tour
@@ -504,6 +506,7 @@ function inOrder() {
 
 // tour of points using nearest neighbor heuristic
 function nearestNeighbor() {
+	$( "#listado" ).empty();
 	var remaining = generateRandomPath();
 	console.log(remaining);
 	path = [remaining[0]];
@@ -515,9 +518,10 @@ function nearestNeighbor() {
 
 		// find nearest neighbor
 		for (var j = i + 1; j < points.length; j++) {
-			currentDistance = distanceMatrix[path[i]][remaining[j]];
+			let currentDistance = distanceMatrix[path[i]][remaining[j]];
 			if (currentDistance < nearestDistance) {
 				nearestPoint = remaining[j];
+				console.log(nearestPoint);
 				nearestDistance = currentDistance;
 				indexInRemaining = j;
 			}
@@ -591,6 +595,7 @@ function nearFarInsertion(farthest) {
 		var minimalDistance = height * height + width * width + 1;
 		var maximalDistanceToTour = -1;
 		var bestPoint = null;
+		console.log(bestPoint);
 
 		for (var j = i; j < points.length; j++) {
 
@@ -622,12 +627,13 @@ function nearFarInsertion(farthest) {
 			}	
 
 		}
+		console.log(bestPoint);
 
 		remaining = swap(remaining, indexInRemaining, i);
 
 		// look for the edge in the subtour where insertion would be least costly
-		smallestDetour = height * height + width * width + 1;
-		for (var k = 0; k < path.length - 1; k++) {
+		let smallestDetour = height * height + width * width + 1;
+		for ( k = 0; k < path.length - 1; k++) {
 			var currentDetour = detour(path[k], remaining[i], path[k + 1]);
 			if (currentDetour < smallestDetour) {
 				smallestDetour = currentDetour;
@@ -682,13 +688,14 @@ function simulatedAnnealing(coolingFunction) {
 	//var steps = 100;
 	var startTemp = N / 2;
 	var endTemp = 1;
+	console.log(endTemp);
 	currPathDistance = getPathDistance(path);
 
 	var numSwaps = 0;
 
 	//var bestDistance = Number.MAX_SAFE_INTEGER;
 	for (var step = 0; step < steps; step++) {
-		temp = coolingFunction(startTemp, step, steps);
+		let temp = coolingFunction(startTemp, step, steps);
 		var i = Math.floor(path.length * Math.random());
 		var j = Math.floor(path.length * Math.random());
 		var first = Math.min(i, j);
@@ -752,7 +759,7 @@ function genetic() {
 		parentPaths[i] = generateRandomPath();
 	}
 
-	for (var i = 0; i < generations; i++) {
+	for ( i = 0; i < generations; i++) {
 		childrenPaths = [];
 		for (var j = 0; j < popSize; j++) {
 			var firstParent = tournamentSelect(parentPaths);
@@ -815,12 +822,12 @@ function orderCrossover(firstPath, secondPath) {
 	var first = Math.min(i, j);
 	var second = Math.max(i, j);
 
-	for (var i = first; i <= second; i++) {
+	for (i = first; i <= second; i++) {
 		firstChild[i] = firstPath[i];
 	}
 
 	var indexInSecond = 0;
-	for (var i = 0; i < firstPath.length; i++) {
+	for ( i = 0; i < firstPath.length; i++) {
 		if (i >= first && i <= second) {
 			continue;
 		}
@@ -849,6 +856,7 @@ function mutation(child) {
 
 	var changeInDistance = distanceMatrix[child[first]][child[second]] + distanceMatrix[child[afterSecond]][child[first + 1]] 
 		- distanceMatrix[child[first]][child[first + 1]] + distanceMatrix[child[second]][child[afterSecond]];
+	console.log(changeInDistance);
 
 	child = swapEdges(child, first, second);
 
@@ -911,8 +919,8 @@ function twoOpt(count) {
 	return getPathDistance(path);
 }
 
-function swapEdges(path, first, second) {
-	return path.slice(0, first + 1).concat(path.slice(first + 1, second + 1).reverse().concat(path.slice(second + 1)));
+function swapEdges(path9, first, second) {
+	return path9.slice(0, first + 1).concat(path9.slice(first + 1, second + 1).reverse().concat(path9.slice(second + 1)));
 }
 
 // wraps heuristic functions and uses setTimeout to show loading screen
